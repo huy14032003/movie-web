@@ -24,8 +24,8 @@ export function Header({ onSearch, searchQuery, onLoginClick }: HeaderProps) {
 
   const menuItems = [
     { label: 'Trang Chủ', href: '/home' },
-    { label: 'Phim Lẻ', href: '/phim-le' },
-    { label: 'Phim Bộ', href: '/phim-bo' },
+    { label: 'Phim Lẻ', href: '/detail' },
+    { label: 'Phim Bộ', href: '/view-movie' },
     { label: 'Phim Chiếu Rạp', href: '/chieu-rap' },
     { label: 'Thể Loại', href: '/the-loai' },
   ];

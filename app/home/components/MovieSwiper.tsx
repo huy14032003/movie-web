@@ -45,7 +45,7 @@ const MovieSwiper = ({
                 } as React.CSSProperties}
                 modules={[Navigation]}
                 spaceBetween={12}
-                slidesPerView={isLandscape ? 1.5 : 3.5}
+                slidesPerView={isLandscape ? 1.5 : 2.5}
                 navigation={showNavigation}
                 breakpoints={isLandscape ? {
                     640: { slidesPerView: 2 },
@@ -53,12 +53,12 @@ const MovieSwiper = ({
                     1024: { slidesPerView: 3 },
                     1900: { slidesPerView: 5 },
                 } : {
-                    640: { slidesPerView: 4 },
+                    640: { slidesPerView: 3.5 },
                     768: { slidesPerView: 5 },
                     1024: { slidesPerView: 6 },
                     1900: { slidesPerView: 7 },
                 }}
-                className="w-full !px-4"
+                className="w-full  md:px-4!"
             >
                 {movies.map((movie) => (
                     <SwiperSlide key={movie.id}>
@@ -92,10 +92,10 @@ const MovieSwiper = ({
 
                                 {/* Content Overlay - Landscape */}
                                 {isLandscape && (
-                                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                                    <div className="absolute bottom-0 left-0 right-0 p-4 hidden md:block">
                                         {/* Small Poster Thumbnail */}
                                         <div className="flex gap-3 items-end">
-                                            <div className="w-16 h-[90px] rounded overflow-hidden flex-shrink-0 border-2 border-white/20">
+                                            <div className="w-16 h-[90px] rounded overflow-hidden flex-shrink-0 border-2 border-white/20 hidden md:flex">
                                                 <Image
                                                     src={movie.poster}
                                                     alt={movie.title}
@@ -111,7 +111,7 @@ const MovieSwiper = ({
                                                 <p className="text-gray-400 text-xs truncate">
                                                     {movie.description}
                                                 </p>
-                                                <div className="flex items-center gap-2 mt-1 text-xs text-gray-400">
+                                                <div className="flex items-center gap-2 mt-1 text-xs text-gray-400 text-nowrap">
                                                     <span className="text-yellow-500">★ {movie.rating}</span>
                                                     <span>•</span>
                                                     <span>{movie.year}</span>
@@ -125,7 +125,7 @@ const MovieSwiper = ({
 
                                 {/* Content Overlay - Portrait */}
                                 {!isLandscape && (
-                                    <div className="absolute bottom-0 left-0 right-0 p-3">
+                                    <div className="absolute bottom-0 left-0 right-0 p-3 hidden md:block">
                                         <h3 className="text-white text-sm font-bold truncate">
                                             {movie.title}
                                         </h3>
@@ -139,6 +139,23 @@ const MovieSwiper = ({
                                         </div>
                                     </div>
                                 )}
+                            </div>
+                            {/* Mobile Text Block - Both Landscape and Portrait */}
+                            <div className="md:hidden mt-2">
+                                <h3 className="text-white text-sm font-bold truncate">
+                                    {movie.title}
+                                </h3>
+                                <div className="flex items-center gap-2 mt-1 text-xs text-gray-400 text-nowrap">
+                                    <span className="text-yellow-500">★ {movie.rating}</span>
+                                    <span>•</span>
+                                    <span>{movie.year}</span>
+                                    {isLandscape && (
+                                        <>
+                                            <span>•</span>
+                                            <span>{movie.duration}</span>
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </SwiperSlide>

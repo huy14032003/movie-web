@@ -6,14 +6,14 @@ import LazySection from '@/app/components/LazySection';
 const HomePage = () => {
 
   return (
-    <div className='px-6 space-y-8'>
+    <div className=' px-2 md:px-6 space-y-8'>
       <Banner />
 
       {/* Card ngang - Landscape */}
       <LazySection animationType="slideUp">
         <div className="bg-[#0f0f0f] px-6 py-4 rounded-xl">
           <div className="flex items-center justify-start mb-4 px-4 gap-2">
-            <h2 className="text-xl md:text-2xl font-bold text-white">
+            <h2 className="text-lg md:text-2xl font-bold text-white">
               Mãn Nhãn với Phim Chiếu Rạp
             </h2>
             <button className="text-gray-400 hover:text-white transition-colors rounded-full border border-white">
@@ -30,7 +30,7 @@ const HomePage = () => {
 
       {/* Card dọc - Portrait */}
       <LazySection animationType="fade">
-        <div className="bg-[#0f0f0f] px-6 py-4 rounded-xl space-y-6">
+        <div className="bg-[#0f0f0f] md:px-6 md:py-4 rounded-xl space-y-6">
           <div className="flex items-center justify-start mb-4 px-4 gap-2">
             <h2 className="text-xl md:text-2xl font-bold text-white">
               Phim Hàn Quốc mới

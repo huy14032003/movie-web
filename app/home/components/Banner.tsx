@@ -16,9 +16,6 @@ const Banner = () => {
         <div className="mb-8">
 
             <Swiper
-                pagination={{
-                    dynamicBullets: true,
-                }}
                 loop={true}
                 autoplay={{
                     delay: 7000,

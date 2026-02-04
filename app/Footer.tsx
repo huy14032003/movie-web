@@ -35,7 +35,7 @@ const Footer = () => {
                     </div>
 
                     {/* Phim */}
-                    <div>
+                    {/* <div>
                         <h3 className="text-white font-bold mb-4">Phim</h3>
                         <ul className="space-y-2 text-sm">
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Phim Mới</a></li>
@@ -44,10 +44,10 @@ const Footer = () => {
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Phim Chiếu Rạp</a></li>
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Top IMDB</a></li>
                         </ul>
-                    </div>
+                    </div> */}
 
                     {/* Thể Loại */}
-                    <div>
+                    {/* <div>
                         <h3 className="text-white font-bold mb-4">Thể Loại</h3>
                         <ul className="space-y-2 text-sm">
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Hành Động</a></li>
@@ -56,7 +56,7 @@ const Footer = () => {
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Hài Hước</a></li>
                             <li><a href="#" className="text-gray-400 hover:text-white transition-colors">Khoa Học Viễn Tưởng</a></li>
                         </ul>
-                    </div>
+                    </div> */}
 
                     {/* Liên Hệ */}
                     <div>

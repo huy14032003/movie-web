@@ -12,7 +12,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`antialiased bg-black text-white`}>
-        <CursorTrail />
+        {/* <CursorTrail /> */}
         <ClickParticles />
         <div className="fixed inset-0 opacity-5 pointer-events-none">
           <img

@@ -12,7 +12,7 @@ export const movies: Movie[] = [
     poster: 'https://images.unsplash.com/photo-1765510296004-614b6cc204da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhY3Rpb24lMjBtb3ZpZSUyMHBvc3RlcnxlbnwxfHx8fDE3Njk5NzIzNTR8MA&ixlib=rb-4.1.0&q=80&w=1080',
     backdrop: 'https://images.unsplash.com/photo-1765510296004-614b6cc204da?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhY3Rpb24lMjBtb3ZpZSUyMHBvc3RlcnxlbnwxfHx8fDE3Njk5NzIzNTR8MA&ixlib=rb-4.1.0&q=80&w=1080',
     director: 'Nguyễn Văn A',
-    cast: ['Trần Bảo Sơn', 'Ngô Thanh Vân', 'Johnny Trí Nguyễn'],
+    cast: ['Trần Bảo Sơn', 'Ngô Thanh Vân', 'Johnny Trí Nguyễn','Trần Quang Huy','Nguyễn Khánh Vân','Nguyễn Văn Trà', 'Trần Nhật Nam'],
     trailer: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     featured: true,
   },
