@@ -43,7 +43,7 @@ const Banner = () => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
                             </div>
 
-                            <div className="relative h-full flex items-center px-8 md:px-16">
+                            <div className="relative h-full flex items-end px-8 md:px-16">
                                 <div className="max-w-2xl">
                                     <h1 className="text-4xl md:text-6xl mb-4 text-white font-bold">
                                         {movie.title}
