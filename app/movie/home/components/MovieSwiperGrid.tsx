@@ -5,6 +5,7 @@ import { Grid, Navigation } from 'swiper/modules';
 import { Movie } from '@/types/movie';
 import { movies as defaultMovies } from '@/data/movies';
 import Image from 'next/image';
+import MovieTooltip from '@/app/components/MovieTooltip';
 
 import 'swiper/css';
 import 'swiper/css/grid';
@@ -28,6 +29,7 @@ const MovieSwiperGrid = ({
                     {title}
                 </h2>
             )}
+
 
             <Swiper
                 style={{
@@ -59,37 +61,41 @@ const MovieSwiperGrid = ({
             >
                 {movies.map((movie) => (
                     <SwiperSlide key={movie.id}>
-                        <div className="group relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-900 cursor-pointer">
-                            <Image
-                                src={movie.poster}
-                                alt={movie.title}
-                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                width={300}
-                                height={400}
-                            />
+                        <MovieTooltip movie={movie}>
+                            <div className="group relative aspect-[3/4] rounded-lg overflow-hidden bg-gray-900 cursor-pointer">
+                                <Image
+                                    src={movie.poster}
+                                    alt={movie.title}
+                                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                    width={300}
+                                    height={400}
+                                />
 
-                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
 
-                            <div className="absolute top-2 right-2 flex flex-col gap-1">
-                                <span className="px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded">
-                                    FHD
-                                </span>
-                            </div>
+                                <div className="absolute top-2 right-2 flex flex-col gap-1">
+                                    <span className="px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded">
+                                        FHD
+                                    </span>
+                                </div>
 
-                            <div className="absolute bottom-0 left-0 right-0 p-3 transform translate-y-0 group-hover:translate-y-0 transition-transform">
-                                <h3 className="text-white text-sm font-bold truncate">
-                                    {movie.title}
-                                </h3>
-                                <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
-                                    <span>⭐ {movie.rating}</span>
-                                    <span>•</span>
-                                    <span>{movie.year}</span>
+                                <div className="absolute bottom-0 left-0 right-0 p-3 transform translate-y-0 group-hover:translate-y-0 transition-transform">
+                                    <h3 className="text-white text-sm font-bold truncate">
+                                        {movie.title}
+                                    </h3>
+                                    <div className="flex items-center gap-2 text-xs text-gray-400 mt-1">
+                                        <span>⭐ {movie.rating}</span>
+                                        <span>•</span>
+                                        <span>{movie.year}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </MovieTooltip>
                     </SwiperSlide>
                 ))}
             </Swiper>
+
+
         </div>
     );
 };

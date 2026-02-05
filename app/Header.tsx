@@ -26,7 +26,7 @@ export function Header({ onSearch, searchQuery, onLoginClick }: HeaderProps) {
     { label: 'Trang Chủ', href: '/home' },
     { label: 'Phim Lẻ', href: '/detail' },
     { label: 'Phim Bộ', href: '/view-movie' },
-    { label: 'Phim Chiếu Rạp', href: '/chieu-rap' },
+    { label: 'Phim Chiếu Rạp', href: '/list-movie' },
     { label: 'Thể Loại', href: '/the-loai' },
   ];
 

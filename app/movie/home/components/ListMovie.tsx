@@ -10,6 +10,7 @@ import { movies as defaultMovies } from '@/data/movies';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import Image from 'next/image';
+import CardZoom from '@/app/components/CardZoom';
 
 interface ListMovieProps {
     title: string;
