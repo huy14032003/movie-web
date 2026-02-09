@@ -23,10 +23,10 @@ export function Header({ onSearch, searchQuery, onLoginClick }: HeaderProps) {
   }, []);
 
   const menuItems = [
-    { label: 'Trang Chủ', href: '/home' },
-    { label: 'Phim Lẻ', href: '/detail' },
-    { label: 'Phim Bộ', href: '/view-movie' },
-    { label: 'Phim Chiếu Rạp', href: '/list-movie' },
+    { label: 'Trang Chủ', href: '/movie/home' },
+    { label: 'Phim Lẻ', href: '/movie/detail' },
+    { label: 'Phim Bộ', href: '/movie/view-movie' },
+    { label: 'Phim Chiếu Rạp', href: '/movie/list-movie' },
     { label: 'Thể Loại', href: '/the-loai' },
   ];
 

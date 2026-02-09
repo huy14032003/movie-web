@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
+import Hls from 'hls.js';
 import { Movie } from '@/types/movie';
 
 interface VideoPlayerPageProps {
@@ -18,8 +19,51 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
     const episodes = Array.from({ length: totalEpisodes }, (_, i) => i + 1);
     const servers = ['VIP', 'Server 1', 'Server 2', 'Server 3'];
 
-    // Sample video URL (Big Buck Bunny)
-    const videoUrl = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+    const videoUrl = "https://pub-0aa9f7b9bd6f4334adc80e57472ff70c.r2.dev/phim-2/output.m3u8";
+
+    useEffect(() => {
+        const video = videoRef.current;
+        if (!video) return;
+
+        if (Hls.isSupported()) {
+            const hls = new Hls({
+                enableWorker: true,
+                lowLatencyMode: false,
+            });
+
+            hls.loadSource(videoUrl);
+            hls.attachMedia(video);
+
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                console.log('HLS manifest loaded');
+            });
+
+            hls.on(Hls.Events.ERROR, (event, data) => {
+                if (data.fatal) {
+                    console.error('HLS fatal error:', data);
+                    switch (data.type) {
+                        case Hls.ErrorTypes.NETWORK_ERROR:
+                            console.error('Network error');
+                            hls.startLoad();
+                            break;
+                        case Hls.ErrorTypes.MEDIA_ERROR:
+                            console.error('Media error');
+                            hls.recoverMediaError();
+                            break;
+                        default:
+                            hls.destroy();
+                            break;
+                    }
+                }
+            });
+
+            return () => {
+                hls.destroy();
+            };
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = videoUrl;
+        }
+    }, [videoUrl]);
 
     // Mock comments
     const comments = [
@@ -68,10 +112,8 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
                             className="w-full h-full object-contain"
                             controls
                             poster={movie.backdrop || movie.poster}
-                        >
-                            <source src={videoUrl} type="video/mp4" />
-                            Trình duyệt không hỗ trợ video.
-                        </video>
+                        />
+
                     </div>
 
                     {/* Control Bar */}
@@ -161,8 +203,8 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
                                         key={server}
                                         onClick={() => setSelectedServer(server)}
                                         className={`px-3 py-1 text-sm rounded transition-colors whitespace-nowrap ${selectedServer === server
-                                                ? 'bg-yellow-500 text-black font-semibold'
-                                                : 'bg-gray-800 hover:bg-gray-700'
+                                            ? 'bg-yellow-500 text-black font-semibold'
+                                            : 'bg-gray-800 hover:bg-gray-700'
                                             }`}
                                     >
                                         {server}
@@ -176,8 +218,8 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
                                         key={ep}
                                         onClick={() => setCurrentEpisode(ep)}
                                         className={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentEpisode === ep
-                                                ? 'bg-yellow-500 text-black'
-                                                : 'bg-gray-800 hover:bg-gray-700'
+                                            ? 'bg-yellow-500 text-black'
+                                            : 'bg-gray-800 hover:bg-gray-700'
                                             }`}
                                     >
                                         Tập {ep}

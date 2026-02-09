@@ -92,7 +92,7 @@ const Sidebar = () => {
                 {/* Footer */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-800">
                     <Link
-                        href="/"
+                        href="/movie/home"
                         className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
