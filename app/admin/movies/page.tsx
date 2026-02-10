@@ -167,7 +167,7 @@ const MoviesPage = () => {
                                                 <Edit size={18} />
                                             </Link>
                                             <button
-                                                onClick={() => handleDelete(movie.id)}
+                                                // onClick={() => handleDelete(movie.id)}
                                                 className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                                                 title="Xóa"
                                             >

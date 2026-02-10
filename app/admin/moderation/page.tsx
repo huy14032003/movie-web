@@ -97,7 +97,7 @@ const ModerationPage = () => {
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleApprove(movie.id);
+                                            // handleApprove(movie.id);
                                         }}
                                         className="p-2 bg-green-500/10 text-green-500 rounded-lg hover:bg-green-500/20 transition-colors"
                                         title="Duyệt"
@@ -107,7 +107,7 @@ const ModerationPage = () => {
                                     <button
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleReject(movie.id);
+                                            // handleReject(movie.id);
                                         }}
                                         className="p-2 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500/20 transition-colors"
                                         title="Từ chối"
@@ -182,14 +182,14 @@ const ModerationPage = () => {
                             {/* Action Buttons */}
                             <div className="flex gap-3">
                                 <button
-                                    onClick={() => handleApprove(selectedMovie.id)}
+                                    // onClick={() => handleApprove(selectedMovie.id)}
                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition-colors"
                                 >
                                     <CheckCircle size={18} />
                                     Duyệt
                                 </button>
                                 <button
-                                    onClick={() => handleReject(selectedMovie.id)}
+                                    // onClick={() => handleReject(selectedMovie.id)}
                                     className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-600 transition-colors"
                                 >
                                     <XCircle size={18} />
