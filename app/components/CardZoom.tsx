@@ -63,11 +63,10 @@ const CardZoom = ({ movie }: { movie: Movie }) => {
                         </span>
                     </div>
 
-                    {/* Genres */}
                     <div className="flex flex-wrap gap-2">
-                        {movie.genre.map((genre, i) => (
+                        {movie?.genres?.map((genre, i) => (
                             <span key={i} className="px-2.5 py-1 bg-green-800/90 text-white text-xs font-semibold rounded">
-                                {genre}
+                                {genre.name}
                             </span>
                         ))}
                     </div>

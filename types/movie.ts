@@ -5,7 +5,7 @@ export interface Movie {
   year: number;
   rating: number;
   duration: string;
-  genre: string[];
+  genres?: { name: string }[];
   poster: string;
   backdrop?: string;
   director?: string;

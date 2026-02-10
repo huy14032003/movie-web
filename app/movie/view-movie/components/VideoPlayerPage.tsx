@@ -343,9 +343,9 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
                                                 <span>{relatedMovie.year}</span>
                                             </div>
                                             <div className="flex flex-wrap gap-1">
-                                                {relatedMovie.genre.slice(0, 2).map((g, i) => (
+                                                {relatedMovie.genres?.slice(0, 2).map((g, i) => (
                                                     <span key={i} className="px-1.5 py-0.5 bg-gray-700 text-[10px] rounded">
-                                                        {g}
+                                                        {g.name}
                                                     </span>
                                                 ))}
                                             </div>

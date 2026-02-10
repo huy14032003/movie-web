@@ -7,6 +7,7 @@ import CursorTrail from "@/app/components/CursorTrail";
 import Footer from "@/app/Footer";
 import ClickParticles from "@/app/components/ClickParticles";
 import { createMetadata } from "@/lib/seo";
+import StoreProvider from "@/store/StoreProvider";
 
 // Metadata chính cho toàn bộ website
 export const metadata: Metadata = createMetadata({
@@ -67,9 +68,11 @@ export default function RootLayout({
           />
         </div>
         {/* <Header /> */}
-        <div className="">
-          {children}
-        </div>
+        <StoreProvider>
+          <div className="">
+            {children}
+          </div>
+        </StoreProvider>
       </body>
     </html>
   );

@@ -20,14 +20,14 @@ interface MovieSwiperProps {
 
 const MovieSwiper = ({
     title,
-    movies = defaultMovies,
+    movies,
     cardOrientation = 'portrait',
     showNavigation = true,
 }: MovieSwiperProps) => {
     const isLandscape = cardOrientation === 'landscape';
     return (
         <div className="w-full py-6">
-   
+
             <Swiper
                 style={{
                     '--swiper-navigation-color': '#fff',
@@ -37,36 +37,43 @@ const MovieSwiper = ({
                 slidesPerView={isLandscape ? 1.5 : 2.5}
                 navigation={showNavigation}
                 breakpoints={isLandscape ? {
-                    640: { slidesPerView: 2,
+                    640: {
+                        slidesPerView: 2,
                         navigation: false,
-                     },
-                    768: { slidesPerView: 3.5,
+                    },
+                    768: {
+                        slidesPerView: 3.5,
                         navigation: false,
-                     },
-                    1024: { slidesPerView: 3,
+                    },
+                    1024: {
+                        slidesPerView: 3,
                         navigation: true,
-                     },
+                    },
                     1900: {
                         slidesPerView: 5,
                         navigation: true,
                     },
                 } : {
-                    640: { slidesPerView: 3.5,
+                    640: {
+                        slidesPerView: 3.5,
                         navigation: false,
-                     },
-                    768: { slidesPerView: 5,
+                    },
+                    768: {
+                        slidesPerView: 5,
                         navigation: false,
-                     },
-                    1024: { slidesPerView: 6,
+                    },
+                    1024: {
+                        slidesPerView: 6,
                         navigation: true,
-                     },
-                    1900: { slidesPerView: 7,
+                    },
+                    1900: {
+                        slidesPerView: 7,
                         navigation: true,
-                     },
+                    },
                 }}
                 className="w-full  md:px-4!"
             >
-                {movies.map((movie) => (
+                {movies?.map((movie) => (
                     <SwiperSlide key={movie.id}>
                         <MovieTooltip movie={movie}>
                             <div className="group cursor-pointer">
@@ -90,9 +97,9 @@ const MovieSwiper = ({
                                         <span className="px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded">
                                             FHD
                                         </span>
-                                        {movie.genre[0] && cardOrientation === 'landscape' && (
+                                        {movie.genres?.[0]?.name && cardOrientation === 'landscape' && (
                                             <span className="px-2 py-0.5 text-xs font-semibold text-white bg-green-600 rounded">
-                                                {movie.genre[0]}
+                                                {movie.genres[0].name}
                                             </span>
                                         )}
                                     </div>
