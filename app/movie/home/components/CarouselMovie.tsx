@@ -100,7 +100,7 @@ const CarouselMovie = ({
                                             <span>•</span>
                                             <span>{movie.duration}</span>
                                             <span>•</span>
-                                            <span>{movie.genre.join(', ')}</span>
+                                            <span>{movie.genres?.map(g => g.name).join(', ') || 'N/A'}</span>
                                         </div>
                                     </>
                                 )}

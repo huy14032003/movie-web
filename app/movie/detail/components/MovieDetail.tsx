@@ -76,9 +76,9 @@ const MovieDetail = ({ movie }: MovieDetailProps) => {
                                 <span className="text-gray-300">{movie.year}</span>
                                 <span className="text-gray-400">•</span>
                                 <div className="flex gap-1">
-                                    {movie.genre.slice(0, 2).map((g, i) => (
+                                    {(movie.genres || []).slice(0, 2).map((g, i) => (
                                         <span key={i} className="px-2 py-0.5 bg-gray-700/80 rounded text-xs md:text-sm">
-                                            {g}
+                                            {g.name}
                                         </span>
                                     ))}
                                 </div>
@@ -190,7 +190,7 @@ const MovieDetail = ({ movie }: MovieDetailProps) => {
                             )}
                             <div>
                                 <span className="text-gray-400">Thể loại:</span>
-                                <span className="ml-2 text-white">{movie.genre.join(', ')}</span>
+                                <span className="ml-2 text-white">{(movie.genres || []).map(g => g.name).join(', ')}</span>
                             </div>
                             <div>
                                 <span className="text-gray-400">Thời lượng:</span>

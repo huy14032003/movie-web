@@ -52,8 +52,8 @@ const ModerationPage = () => {
                         <div
                             key={movie.id}
                             className={`bg-gray-900 rounded-xl p-6 border cursor-pointer transition-all ${selectedMovie?.id === movie.id
-                                    ? 'border-red-500'
-                                    : 'border-gray-800 hover:border-gray-700'
+                                ? 'border-red-500'
+                                : 'border-gray-800 hover:border-gray-700'
                                 }`}
                             onClick={() => setSelectedMovie(movie)}
                         >
@@ -157,7 +157,7 @@ const ModerationPage = () => {
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-400">Thể loại:</span>
-                                    <span className="text-white">{selectedMovie.genre.join(', ')}</span>
+                                    <span className="text-white">{selectedMovie.genres?.map(g => g.name).join(', ') || 'N/A'}</span>
                                 </div>
                                 <div className="flex justify-between">
                                     <span className="text-gray-400">Người tạo:</span>

@@ -121,13 +121,13 @@ export function createMetadata({
 // Tạo metadata cho trang phim (detail)
 export function createMovieMetadata(movie: Movie): Metadata {
   const title = `${movie.title} (${movie.year})`;
-  const description = `${movie.description} - Đạo diễn: ${movie.director || 'Đang cập nhật'}. Thể loại: ${movie.genre.join(', ')}. Rating: ${movie.rating}/10. Thời lượng: ${movie.duration}.`;
+  const description = `${movie.description} - Đạo diễn: ${movie.director || 'Đang cập nhật'}. Thể loại: ${movie.genres?.join(', ') || 'Đang cập nhật'}. Rating: ${movie.rating}/10. Thời lượng: ${movie.duration}.`;
 
   const keywords = [
     movie.title,
     `xem ${movie.title}`,
     `phim ${movie.title}`,
-    ...movie.genre,
+    ...(movie.genres?.map(g => g.name) || []),
     movie.director || '',
     `phim ${movie.year}`,
     ...(movie.cast || []),
@@ -153,7 +153,7 @@ export function createMovieStructuredData(movie: Movie) {
     description: movie.description,
     image: movie.poster,
     dateCreated: `${movie.year}-01-01`,
-    genre: movie.genre,
+    genre: movie.genres,
     director: {
       '@type': 'Person',
       name: movie.director || 'Unknown',
