@@ -138,7 +138,7 @@ export function createMovieMetadata(movie: Movie): Metadata {
     description,
     keywords,
     image: movie.backdrop || movie.poster,
-    url: `/movie/detail?id=${movie.id}`,
+    url: `/movie/detail/${movie.id}`,
     type: 'video.movie',
     publishedTime: new Date(movie.year, 0, 1).toISOString(),
   });
@@ -221,7 +221,7 @@ export function createMovieListStructuredData(movies: Movie[], listName: string)
       item: {
         '@type': 'Movie',
         name: movie.title,
-        url: `${siteConfig.url}/movie/detail?id=${movie.id}`,
+        url: `${siteConfig.url}/movie/detail/${movie.id}`,
         image: movie.poster,
         dateCreated: `${movie.year}-01-01`,
         aggregateRating: {

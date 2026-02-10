@@ -10,6 +10,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import CardZoom from '@/app/components/CardZoom';
 import MovieTooltip from '@/app/components/MovieTooltip';
+import useHandle from '../hooks/useHandle';
 
 interface MovieSwiperProps {
     title?: string;
@@ -25,6 +26,7 @@ const MovieSwiper = ({
     showNavigation = true,
 }: MovieSwiperProps) => {
     const isLandscape = cardOrientation === 'landscape';
+    const { handleClickMovie } = useHandle();
     return (
         <div className="w-full py-6">
 
@@ -73,108 +75,122 @@ const MovieSwiper = ({
                 }}
                 className="w-full  md:px-4!"
             >
-                {movies?.map((movie) => (
-                    <SwiperSlide key={movie.id}>
-                        <MovieTooltip movie={movie}>
-                            <div className="group cursor-pointer">
-                                {/* Card Container */}
-                                <div className={`relative overflow-hidden rounded-lg bg-gray-900 ${isLandscape ? 'aspect-[16/9]' : 'aspect-[2/3]'
-                                    }`}>
-                                    {/* Main Image */}
-                                    <Image
-                                        src={isLandscape ? (movie.backdrop || movie.poster) : movie.poster}
-                                        alt={movie.title}
-                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                        width={isLandscape ? 400 : 200}
-                                        height={isLandscape ? 225 : 300}
-                                    />
+                {movies?.map((movie) => {
+                    const mainSrc = isLandscape ? (movie.backdrop || movie.poster) : movie.poster;
+                    const thumbSrc = movie.poster;
 
-                                    {/* Overlay Gradient */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-
-                                    {/* Badges */}
-                                    <div className="absolute top-2 right-2 flex gap-1 text-nowrap">
-                                        <span className="px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded">
-                                            FHD
-                                        </span>
-                                        {movie.genres?.[0]?.name && cardOrientation === 'landscape' && (
-                                            <span className="px-2 py-0.5 text-xs font-semibold text-white bg-green-600 rounded">
-                                                {movie.genres[0].name}
-                                            </span>
+                    return (
+                        <SwiperSlide key={movie.id}>
+                            <MovieTooltip movie={movie}>
+                                <div className="group cursor-pointer" >
+                                    {/* Card Container */}
+                                    <div className={`relative overflow-hidden rounded-lg bg-gray-900 ${isLandscape ? 'aspect-[16/9]' : 'aspect-[2/3]'
+                                        }`} onClick={() => handleClickMovie(movie.id)}>
+                                        {/* Main Image */}
+                                        {mainSrc ? (
+                                            <Image
+                                                src={mainSrc}
+                                                alt={movie.title}
+                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                width={isLandscape ? 400 : 200}
+                                                height={isLandscape ? 225 : 300}
+                                            />
+                                        ) : (
+                                            // Fallback for missing image
+                                            <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+                                                <span className="text-gray-600 text-xs">No Image</span>
+                                            </div>
                                         )}
-                                    </div>
 
-                                    {/* Content Overlay - Landscape */}
-                                    {isLandscape && (
-                                        <div className="absolute bottom-0 left-0 right-0 p-4 hidden md:block">
-                                            {/* Small Poster Thumbnail */}
-                                            <div className="flex gap-3 items-end">
-                                                <div className="w-16 h-[90px] rounded overflow-hidden flex-shrink-0 border-2 border-white/20 hidden md:flex">
-                                                    <Image
-                                                        src={movie.poster}
-                                                        alt={movie.title}
-                                                        className="w-full h-full object-cover"
-                                                        width={64}
-                                                        height={90}
-                                                    />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <h3 className="text-white text-sm md:text-base font-bold truncate">
-                                                        {movie.title}
-                                                    </h3>
-                                                    <p className="text-gray-400 text-xs truncate">
-                                                        {movie.description}
-                                                    </p>
-                                                    <div className="flex items-center gap-2 mt-1 text-xs text-gray-400 text-nowrap">
-                                                        <span className="text-yellow-500">★ {movie.rating}</span>
-                                                        <span>•</span>
-                                                        <span>{movie.year}</span>
-                                                        <span>•</span>
-                                                        <span>{movie.duration}</span>
+                                        {/* Overlay Gradient */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+                                        {/* Badges */}
+                                        <div className="absolute top-2 right-2 flex gap-1 text-nowrap">
+                                            <span className="px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded">
+                                                FHD
+                                            </span>
+                                            {movie.genres?.[0]?.name && cardOrientation === 'landscape' && (
+                                                <span className="px-2 py-0.5 text-xs font-semibold text-white bg-green-600 rounded">
+                                                    {movie.genres[0].name}
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        {/* Content Overlay - Landscape */}
+                                        {isLandscape && (
+                                            <div className="absolute bottom-0 left-0 right-0 p-4 hidden md:block">
+                                                {/* Small Poster Thumbnail */}
+                                                <div className="flex gap-3 items-end">
+                                                    <div className="w-16 h-[90px] rounded overflow-hidden flex-shrink-0 border-2 border-white/20 hidden md:flex bg-gray-800">
+                                                        {thumbSrc && (
+                                                            <Image
+                                                                src={thumbSrc}
+                                                                alt={movie.title}
+                                                                className="w-full h-full object-cover"
+                                                                width={64}
+                                                                height={90}
+                                                            />
+                                                        )}
+                                                    </div>
+                                                    <div className="flex-1 min-w-0">
+                                                        <h3 className="text-white text-sm md:text-base font-bold truncate">
+                                                            {movie.title}
+                                                        </h3>
+                                                        <p className="text-gray-400 text-xs truncate">
+                                                            {movie.description}
+                                                        </p>
+                                                        <div className="flex items-center gap-2 mt-1 text-xs text-gray-400 text-nowrap">
+                                                            <span className="text-yellow-500">★ {movie.rating}</span>
+                                                            <span>•</span>
+                                                            <span>{movie.year}</span>
+                                                            <span>•</span>
+                                                            <span>{movie.duration}</span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    )}
+                                        )}
 
-                                    {/* Content Overlay - Portrait */}
-                                    {!isLandscape && (
-                                        <div className="absolute bottom-0 left-0 right-0 p-3 hidden md:block">
-                                            <h3 className="text-white text-sm font-bold truncate">
-                                                {movie.title}
-                                            </h3>
-                                            <p className="text-gray-400 text-xs truncate">
-                                                {movie.description}
-                                            </p>
-                                            <div className="flex items-center gap-2 mt-1 text-xs text-gray-400">
-                                                <span className="text-yellow-500">★ {movie.rating}</span>
-                                                <span>•</span>
-                                                <span>{movie.year}</span>
+                                        {/* Content Overlay - Portrait */}
+                                        {!isLandscape && (
+                                            <div className="absolute bottom-0 left-0 right-0 p-3 hidden md:block">
+                                                <h3 className="text-white text-sm font-bold truncate">
+                                                    {movie.title}
+                                                </h3>
+                                                <p className="text-gray-400 text-xs truncate">
+                                                    {movie.description}
+                                                </p>
+                                                <div className="flex items-center gap-2 mt-1 text-xs text-gray-400">
+                                                    <span className="text-yellow-500">★ {movie.rating}</span>
+                                                    <span>•</span>
+                                                    <span>{movie.year}</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    )}
-                                </div>
-                                {/* Mobile Text Block - Both Landscape and Portrait */}
-                                <div className="md:hidden mt-2">
-                                    <h3 className="text-white text-sm font-bold truncate">
-                                        {movie.title}
-                                    </h3>
-                                    <div className="flex items-center gap-2 mt-1 text-xs text-gray-400 text-nowrap">
-                                        <span className="text-yellow-500">★ {movie.rating}</span>
-                                        <span>•</span>
-                                        <span>{movie.year}</span>
-                                        {isLandscape && (
-                                            <>
-                                                <span>•</span>
-                                                <span>{movie.duration}</span>
-                                            </>
                                         )}
                                     </div>
+                                    {/* Mobile Text Block - Both Landscape and Portrait */}
+                                    <div className="md:hidden mt-2">
+                                        <h3 className="text-white text-sm font-bold truncate">
+                                            {movie.title}
+                                        </h3>
+                                        <div className="flex items-center gap-2 mt-1 text-xs text-gray-400 text-nowrap">
+                                            <span className="text-yellow-500">★ {movie.rating}</span>
+                                            <span>•</span>
+                                            <span>{movie.year}</span>
+                                            {isLandscape && (
+                                                <>
+                                                    <span>•</span>
+                                                    <span>{movie.duration}</span>
+                                                </>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </MovieTooltip>
-                    </SwiperSlide>
-                ))}
+                            </MovieTooltip>
+                        </SwiperSlide>
+                    );
+                })}
             </Swiper>
         </div>
     );

@@ -1,15 +1,21 @@
 export interface Movie {
-  id: string;
+  id: string | number;
   title: string;
   description: string;
   year: number;
   rating: number;
   duration: string;
-  genres?: { name: string }[];
+  genres?: { id: number; name: string }[];
   poster: string;
   backdrop?: string;
   director?: string;
   cast?: string[];
   trailer?: string;
   featured?: boolean;
+  totalEpisodes?: number;
+  episodes?: {
+    id: number;
+    title: string;
+    url: string;
+  }[];
 }

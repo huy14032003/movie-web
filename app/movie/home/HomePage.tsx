@@ -5,6 +5,8 @@ import LazySection from '@/app/components/LazySection'
 import MovieSwiper from './components/MovieSwiper'
 import useGetData from './hooks/useGetData'
 import Banner from './components/Banner'
+import { Movie } from '@/types/movie'
+import { Genre } from './types/HomeType'
 
 const HomePage = () => {
     const {
@@ -14,9 +16,14 @@ const HomePage = () => {
     } = useGetData();
     const featuredMovies = getFeaturedMovie?.content || [];
     const ListMovieAll = getAllMovie?.content.slice(0, 10) || [];
-    const ListMovie = getAllMovie?.content.filter((item: any) => item.genres?.some((genre: any) => genre.id == 1)) || [];
-    const ListMovie2 = getAllMovie?.content.filter((item: any) => item.genres?.some((genre: any) => genre.id == 2)) || [];
-    const ListMovie3 = getAllMovie?.content.filter((item: any) => item.genres?.some((genre: any) => genre.id == 3)) || [];
+    const ListMovie = getAllMovie?.content.filter((item: Movie) => item.genres?.some((genre: Genre) => genre.id == 1)).slice(0, 10) || [];
+    const ListMovie2 = getAllMovie?.content.filter((item: Movie) => item.genres?.some((genre: Genre) => genre.id == 2)).slice(0, 10) || [];
+    const ListMovie3 = getAllMovie?.content.filter((item: Movie) => item.genres?.some((genre: Genre) => genre.id == 3)).slice(0, 10) || [];
+    const ListMovie4 = getAllMovie?.content.filter((item: Movie) => item.genres?.some((genre: Genre) => genre.id == 4)).slice(0, 10) || [];
+    const ListMovie5 = getAllMovie?.content.filter((item: Movie) => item.genres?.some((genre: Genre) => genre.id == 5)).slice(0, 10) || [];
+    const ListMovie6 = getAllMovie?.content.filter((item: Movie) => item.genres?.some((genre: Genre) => genre.id == 6)).slice(0, 10) || [];
+    const ListMovie7 = getAllMovie?.content.filter((item: Movie) => item.genres?.some((genre: Genre) => genre.id == 7)).slice(0, 10) || [];
+    const ListMovie8 = getAllMovie?.content.filter((item: Movie) => item.genres?.some((genre: Genre) => genre.id == 8)).slice(0, 10) || [];
     console.log(ListMovie)
     return (
         <>

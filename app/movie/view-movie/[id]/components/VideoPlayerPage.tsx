@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import Hls from 'hls.js';
 import { Movie } from '@/types/movie';
+import useFetchData from '../hooks/useFetchData';
 
 interface VideoPlayerPageProps {
     movie: Movie;
@@ -15,15 +16,19 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
     const [selectedServer, setSelectedServer] = useState('VIP');
     const videoRef = useRef<HTMLVideoElement>(null);
 
+    const { episodeList } = useFetchData();
+    console.log(episodeList)
+
     const totalEpisodes = 8;
     const episodes = Array.from({ length: totalEpisodes }, (_, i) => i + 1);
     const servers = ['VIP', 'Server 1', 'Server 2', 'Server 3'];
 
-    const videoUrl = "https://pub-0aa9f7b9bd6f4334adc80e57472ff70c.r2.dev/phim-2/output.m3u8";
+    const videoUrl = episodeList?.data?.videoUrl;
+    console.log(videoUrl)
 
     useEffect(() => {
         const video = videoRef.current;
-        if (!video) return;
+        if (!video || !videoUrl) return;
 
         if (Hls.isSupported()) {
             const hls = new Hls({

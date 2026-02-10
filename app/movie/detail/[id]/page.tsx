@@ -5,16 +5,20 @@ import MovieDetail from './components/MovieDetail'
 import { movies } from '@/data/movies'
 import { createMovieMetadata, createMovieStructuredData, createBreadcrumbStructuredData } from '@/lib/seo'
 
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
 // Dynamic metadata based on movie
-export async function generateMetadata(): Promise<Metadata> {
-  // Use first featured movie as example (in real app, get from URL params)
-  const movie = movies.find(m => m.featured) || movies[0];
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const movie = movies.find(m => m.id.toString() === params.id) || movies[0];
   return createMovieMetadata(movie);
 }
 
-const page = () => {
-  // Use first featured movie as example
-  const movie = movies.find(m => m.featured) || movies[0];
+const page = ({ params }: PageProps) => {
+  const movie = movies.find(m => m.id.toString() === params.id) || movies[0];
 
   // Tạo structured data cho phim
   const movieStructuredData = createMovieStructuredData(movie);
@@ -23,7 +27,7 @@ const page = () => {
   const breadcrumbData = createBreadcrumbStructuredData([
     { name: 'Trang Chủ', url: '/movie/home' },
     { name: 'Phim', url: '/movie/list-movie' },
-    { name: movie.title, url: `/movie/detail?id=${movie.id}` },
+    { name: movie.title, url: `/movie/detail/${movie.id}` },
   ]);
 
   return (
@@ -44,7 +48,7 @@ const page = () => {
           __html: JSON.stringify(breadcrumbData),
         }}
       />
-      <MovieDetail movie={movie} />
+      <MovieDetail />
     </div>
   )
 }

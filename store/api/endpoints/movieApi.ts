@@ -75,5 +75,6 @@ export const movieApi = baseApi.injectEndpoints({
 export const {
     useGetMoviesQuery,
     useGetMoviesFeaturedQuery,
+    useGetMovieByIdQuery,
 
 } = movieApi;

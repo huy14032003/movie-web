@@ -1,16 +1,20 @@
 "use client";
 import React, { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Movie } from '@/types/movie';
+import useFetchData from '../hooks/useFetchData';
 
-interface MovieDetailProps {
-    movie: Movie;
-}
 
-const MovieDetail = ({ movie }: MovieDetailProps) => {
+const MovieDetail = () => {
+    const router = useRouter();
     const [selectedTab, setSelectedTab] = useState('movie');
-    const episodes = Array.from({ length: 8 }, (_, i) => i + 1);
-
+    const { getMovieById } = useFetchData();
+    console.log(getMovieById);
+    const movie = getMovieById?.data;
+    // const episodes = Array.from({ length: movie?.totalEpisodes || 1 }, (_, i) => i + 1);
+    const episodes = movie?.episodes?.length;
+    console.log(episodes);
     // Mock comments data
     const comments = [
         {
@@ -36,13 +40,15 @@ const MovieDetail = ({ movie }: MovieDetailProps) => {
             {/* Hero Section with Backdrop */}
             <div className="relative w-full h-[300px] md:h-[500px] lg:h-[600px]">
                 {/* Backdrop Image */}
-                <Image
-                    src={movie.backdrop || movie.poster}
-                    alt={movie.title}
-                    fill
-                    className="object-cover"
-                    priority
-                />
+                {(movie?.backdrop || movie?.poster) && movie?.title && (
+                    <Image
+                        src={movie.backdrop || movie.poster}
+                        alt={movie.title}
+                        fill
+                        className="object-cover"
+                        priority
+                    />
+                )}
 
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-linear-to-t from-black via-black/70 to-transparent" />
@@ -54,42 +60,44 @@ const MovieDetail = ({ movie }: MovieDetailProps) => {
                         {/* Poster - Hidden on mobile */}
                         <div className="hidden md:block shrink-0">
                             <div className="w-[200px] lg:w-[250px] h-[280px] lg:h-[350px] relative rounded-lg overflow-hidden border-2 border-white/20 shadow-2xl">
-                                <Image
-                                    src={movie.poster}
-                                    alt={movie.title}
-                                    fill
-                                    className="object-cover"
-                                />
+                                {movie?.poster && movie?.title && (
+                                    <Image
+                                        src={movie.poster}
+                                        alt={movie.title}
+                                        fill
+                                        className="object-cover"
+                                    />
+                                )}
                             </div>
                         </div>
 
                         {/* Movie Info */}
                         <div className="flex-1 min-w-0 flex flex-col justify-end">
                             <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold mb-2 md:mb-4">
-                                {movie.title}
+                                {movie?.title}
                             </h1>
 
                             {/* Meta Info */}
                             <div className="flex flex-wrap items-center gap-2 md:gap-3 text-sm md:text-base mb-3 md:mb-4">
-                                <span className="text-yellow-500 font-semibold">★ {movie.rating}</span>
+                                <span className="text-yellow-500 font-semibold">★ {movie?.rating}</span>
                                 <span className="text-gray-400">•</span>
-                                <span className="text-gray-300">{movie.year}</span>
+                                <span className="text-gray-300">{movie?.year}</span>
                                 <span className="text-gray-400">•</span>
                                 <div className="flex gap-1">
-                                    {(movie.genres || []).slice(0, 2).map((g, i) => (
+                                    {(movie?.genres || []).slice(0, 2).map((g, i) => (
                                         <span key={i} className="px-2 py-0.5 bg-gray-700/80 rounded text-xs md:text-sm">
                                             {g.name}
                                         </span>
                                     ))}
                                 </div>
                                 <span className="text-gray-400">•</span>
-                                <span className="text-gray-300">{movie.duration}</span>
+                                <span className="text-gray-300">{movie?.duration}</span>
                             </div>
 
                             {/* Director */}
-                            {movie.director && (
+                            {movie?.director && (
                                 <p className="text-gray-400 text-sm md:text-base mb-4">
-                                    Đạo diễn: <span className="text-white">{movie.director}</span>
+                                    Đạo diễn: <span className="text-white">{movie?.director}</span>
                                 </p>
                             )}
                         </div>
@@ -149,12 +157,13 @@ const MovieDetail = ({ movie }: MovieDetailProps) => {
 
                     {/* Episodes Grid */}
                     <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2 md:gap-3">
-                        {episodes.map((ep) => (
+                        {movie?.episodes?.map((ep, index) => (
                             <button
-                                key={ep}
+                                key={ep.id}
                                 className="px-3 py-2 bg-gray-800 hover:bg-yellow-500 hover:text-black rounded text-sm font-medium transition-colors"
+                                onClick={() => router.push(`/movie/view-movie/${ep.id}`)}
                             >
-                                Tập {ep}
+                                Tập {index + 1}
                             </button>
                         ))}
                     </div>
@@ -166,7 +175,7 @@ const MovieDetail = ({ movie }: MovieDetailProps) => {
                     <div className="lg:col-span-2">
                         <h2 className="text-xl md:text-2xl font-bold mb-4">Nội dung</h2>
                         <p className="text-gray-300 leading-relaxed">
-                            {movie.description}
+                            {movie?.description}
                         </p>
                     </div>
 
@@ -176,36 +185,36 @@ const MovieDetail = ({ movie }: MovieDetailProps) => {
                         <div className="space-y-3">
                             <div>
                                 <span className="text-gray-400">Năm sản xuất:</span>
-                                <span className="ml-2 text-white">{movie.year}</span>
+                                <span className="ml-2 text-white">{movie?.year}</span>
                             </div>
                             <div>
                                 <span className="text-gray-400">Quốc gia:</span>
                                 <span className="ml-2 text-white">Việt Nam</span>
                             </div>
-                            {movie.director && (
+                            {movie?.director && (
                                 <div>
                                     <span className="text-gray-400">Đạo diễn:</span>
-                                    <span className="ml-2 text-white">{movie.director}</span>
+                                    <span className="ml-2 text-white">{movie?.director}</span>
                                 </div>
                             )}
                             <div>
                                 <span className="text-gray-400">Thể loại:</span>
-                                <span className="ml-2 text-white">{(movie.genres || []).map(g => g.name).join(', ')}</span>
+                                <span className="ml-2 text-white">{(movie?.genres || []).map(g => g.name).join(', ')}</span>
                             </div>
                             <div>
                                 <span className="text-gray-400">Thời lượng:</span>
-                                <span className="ml-2 text-white">{movie.duration}</span>
+                                <span className="ml-2 text-white">{movie?.duration}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Cast Section */}
-                {movie.cast && movie.cast.length > 0 && (
+                {movie?.cast && movie?.cast.length > 0 && (
                     <div className="mb-8">
                         <h2 className="text-xl md:text-2xl font-bold mb-4">Diễn viên</h2>
                         <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-4">
-                            {movie.cast.map((actor, index) => (
+                            {movie?.cast.map((actor, index) => (
                                 <div key={index} className="text-center">
                                     <div className="w-full aspect-square rounded-full bg-gray-800 mb-2 flex items-center justify-center overflow-hidden">
                                         <svg className="w-12 h-12 text-gray-600" fill="currentColor" viewBox="0 0 20 20">

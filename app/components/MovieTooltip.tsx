@@ -40,8 +40,10 @@ const MovieTooltip = ({ movie, children }: MovieTooltipProps) => {
         strategy: 'fixed',
     });
 
+    const { setFloating, setReference } = refs;
+
     const hover = useHover(context, {
-        delay: { open: 500, close: 100 },
+        delay: { open: 1000, close: 100 },
         move: false,
     });
     const focus = useFocus(context);
@@ -57,13 +59,13 @@ const MovieTooltip = ({ movie, children }: MovieTooltipProps) => {
 
     return (
         <>
-            <div ref={refs.setReference} {...getReferenceProps()}>
+            <div ref={setReference} {...getReferenceProps()}>
                 {children}
             </div>
             {isOpen && (
                 <FloatingPortal>
                     <div
-                        ref={refs.setFloating}
+                        ref={setFloating}
                         style={{
                             ...floatingStyles,
                             zIndex: 9999,

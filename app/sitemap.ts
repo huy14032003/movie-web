@@ -24,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   // Dynamic movie detail pages
   const moviePages = movies.map((movie) => ({
-    url: `${baseUrl}/movie/detail?id=${movie.id}`,
+    url: `${baseUrl}/movie/detail/${movie.id}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
