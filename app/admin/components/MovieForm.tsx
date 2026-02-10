@@ -10,6 +10,20 @@ interface MovieFormProps {
     isEdit?: boolean;
 }
 
+interface FormData {
+    title: string;
+    description: string;
+    year: number;
+    duration: string;
+    rating: number;
+    poster: string;
+    backdrop: string;
+    genres: string[];
+    status: MovieStatus;
+    trailer: string;
+    videoUrl: string;
+}
+
 const genres = [
     'Hành Động', 'Tình Cảm', 'Hài Hước', 'Kinh Dị', 'Khoa Học Viễn Tưởng',
     'Phiêu Lưu', 'Drama', 'Anime', 'Hoạt Hình', 'Tài Liệu'
@@ -17,7 +31,7 @@ const genres = [
 
 const MovieForm = ({ initialData, isEdit = false }: MovieFormProps) => {
     const router = useRouter();
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<FormData>({
         title: initialData?.title || '',
         description: initialData?.description || '',
         year: initialData?.year || new Date().getFullYear(),
@@ -25,7 +39,7 @@ const MovieForm = ({ initialData, isEdit = false }: MovieFormProps) => {
         rating: initialData?.rating || 0,
         poster: initialData?.poster || '',
         backdrop: initialData?.backdrop || '',
-        genre: initialData?.genre || [],
+        genres: initialData?.genres?.map(g => g.name) || [] as string[],
         status: initialData?.status || MovieStatus.DRAFT,
         trailer: '',
         videoUrl: '',
@@ -59,11 +73,11 @@ const MovieForm = ({ initialData, isEdit = false }: MovieFormProps) => {
     };
 
     const toggleGenre = (genre: string) => {
-        const currentGenres = formData.genre as string[];
+        const currentGenres = formData.genres;
         const newGenres = currentGenres.includes(genre)
             ? currentGenres.filter(g => g !== genre)
             : [...currentGenres, genre];
-        setFormData({ ...formData, genre: newGenres });
+        setFormData({ ...formData, genres: newGenres });
     };
 
     return (
@@ -262,9 +276,9 @@ const MovieForm = ({ initialData, isEdit = false }: MovieFormProps) => {
                             key={genre}
                             type="button"
                             onClick={() => toggleGenre(genre)}
-                            className={`px-4 py-2 rounded-lg font-medium transition-all ${(formData.genre as string[]).includes(genre)
-                                    ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white'
-                                    : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
+                            className={`px-4 py-2 rounded-lg font-medium transition-all ${formData.genres.includes(genre)
+                                ? 'bg-gradient-to-r from-red-500 to-orange-500 text-white'
+                                : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
                                 }`}
                         >
                             {genre}
