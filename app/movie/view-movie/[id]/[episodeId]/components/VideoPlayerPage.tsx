@@ -4,23 +4,31 @@ import Image from 'next/image';
 import Hls from 'hls.js';
 import { Movie } from '@/types/movie';
 import useFetchData from '../hooks/useFetchData';
+import { Genre } from '@/app/movie/home/types/HomeType';
 
 interface VideoPlayerPageProps {
-    movie: Movie;
-    relatedMovies?: Movie[];
+    movieId: string;
+    episodeId: string;
 }
 
-const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) => {
+const VideoPlayerPage = ({ movieId, episodeId }: VideoPlayerPageProps) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [currentEpisode, setCurrentEpisode] = useState(1);
     const [selectedServer, setSelectedServer] = useState('VIP');
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    const { episodeList } = useFetchData();
-    console.log(episodeList)
+    const { episodeList, movieData, getAllMovie } = useFetchData(movieId, episodeId);
+    console.log(movieData)
 
-    const totalEpisodes = 8;
-    const episodes = Array.from({ length: totalEpisodes }, (_, i) => i + 1);
+
+
+    const movie = movieData?.data;
+    const movieGenreIds = movie?.genres?.map(g => g.id) || [];
+    const ListMovie = getAllMovie?.content.filter((item: Movie) =>
+        item.genres?.some((genre: Genre) => movieGenreIds.includes(genre.id))
+    ).slice(0, 5) || [];
+
+    const episodes = movieData?.data?.episodes?.length;
     const servers = ['VIP', 'Server 1', 'Server 2', 'Server 3'];
 
     const videoUrl = episodeList?.data?.videoUrl;
@@ -116,7 +124,7 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
                             ref={videoRef}
                             className="w-full h-full object-contain"
                             controls
-                            poster={movie.backdrop || movie.poster}
+                            poster={movieData?.data?.backdrop || movieData?.data?.poster}
                         />
 
                     </div>
@@ -147,7 +155,7 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
                             <div className="flex items-center gap-2 px-3 py-2 bg-gray-800 rounded whitespace-nowrap">
                                 <span className="text-sm">Chuyển tập</span>
                                 <span className="px-2 py-0.5 bg-yellow-500 text-black text-xs font-bold rounded">
-                                    {currentEpisode}/{totalEpisodes}
+                                    {currentEpisode}/{episodes}
                                 </span>
                             </div>
 
@@ -218,16 +226,16 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
                             </div>
 
                             <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-2">
-                                {episodes.map((ep) => (
+                                {movie?.episodes?.map((ep, index) => (
                                     <button
-                                        key={ep}
-                                        onClick={() => setCurrentEpisode(ep)}
-                                        className={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentEpisode === ep
+                                        key={ep.id}
+                                        onClick={() => setCurrentEpisode(ep.id)}
+                                        className={`px-3 py-2 rounded text-sm font-medium transition-colors ${currentEpisode === ep.id
                                             ? 'bg-yellow-500 text-black'
                                             : 'bg-gray-800 hover:bg-gray-700'
                                             }`}
                                     >
-                                        Tập {ep}
+                                        Tập {index + 1}
                                     </button>
                                 ))}
                             </div>
@@ -235,18 +243,18 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
 
                         {/* Movie Info */}
                         <div className="bg-gray-900 rounded-lg p-4">
-                            <h1 className="text-2xl font-bold mb-2">{movie.title}</h1>
+                            <h1 className="text-2xl font-bold mb-2">{movieData?.data?.title}</h1>
                             <div className="flex flex-wrap items-center gap-2 mb-3 text-sm">
-                                <span className="text-yellow-500 font-semibold">★ {movie.rating}</span>
+                                <span className="text-yellow-500 font-semibold">★ {movieData?.data?.rating}</span>
                                 <span className="text-gray-500">•</span>
                                 <span className="px-2 py-0.5 bg-red-600 text-white text-xs font-bold rounded">FHD</span>
                                 <span className="px-2 py-0.5 bg-blue-600 text-white text-xs font-bold rounded">4K</span>
                                 <span className="px-2 py-0.5 bg-green-600 text-white text-xs font-bold rounded">Vietsub</span>
-                                <span className="text-gray-400">{movie.year}</span>
+                                <span className="text-gray-400">{movieData?.data?.year}</span>
                                 <span className="text-gray-500">•</span>
-                                <span className="text-gray-400">{movie.duration}</span>
+                                <span className="text-gray-400">{movieData?.data?.duration}</span>
                             </div>
-                            <p className="text-gray-300 text-sm leading-relaxed">{movie.description}</p>
+                            <p className="text-gray-300 text-sm leading-relaxed">{movieData?.data?.description}</p>
                         </div>
 
                         {/* Comments */}
@@ -306,18 +314,18 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
                     {/* Right Column - Sidebar */}
                     <div className="space-y-6">
                         {/* Cast */}
-                        {movie.cast && movie.cast.length > 0 && (
+                        {movieData?.data?.actors && movieData?.data?.actors.length > 0 && (
                             <div className="bg-gray-900 rounded-lg p-4">
                                 <h2 className="text-xl font-bold mb-4">Diễn viên</h2>
                                 <div className="grid grid-cols-4  gap-3">
-                                    {movie.cast.map((actor, index) => (
+                                    {movieData?.data?.actors.map((actor, index) => (
                                         <div key={index} className="text-center">
                                             <div className="w-full aspect-square rounded-full bg-gray-800 mb-2 flex items-center justify-center overflow-hidden">
                                                 <svg className="w-8 h-8 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                                                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                                                 </svg>
                                             </div>
-                                            <p className="text-xs text-white ">{actor}</p>
+                                            <p className="text-xs text-white ">{typeof actor === 'string' ? actor : actor.name}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -328,7 +336,7 @@ const VideoPlayerPage = ({ movie, relatedMovies = [] }: VideoPlayerPageProps) =>
                         <div className="bg-gray-900 rounded-lg p-4">
                             <h2 className="text-xl font-bold mb-4">Đề xuất cho bạn</h2>
                             <div className="space-y-3">
-                                {relatedMovies.slice(0, 5).map((relatedMovie) => (
+                                {ListMovie.map((relatedMovie) => (
                                     <div key={relatedMovie.id} className="flex gap-3 hover:bg-gray-800 p-2 rounded-lg transition-colors cursor-pointer">
                                         <div className="w-20 h-28 relative rounded overflow-hidden shrink-0">
                                             <Image

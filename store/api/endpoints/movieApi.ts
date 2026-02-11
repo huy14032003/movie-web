@@ -37,6 +37,14 @@ export const movieApi = baseApi.injectEndpoints({
             query: (id) => `/movies/${id}`,
             providesTags: (_result, _error, id) => [{ type: 'Movie', id }],
         }),
+        getMovieByCountry: builder.query<ApiResponse<Movie>, string>({
+            query: (id) => `/movies/country/${id}`,
+            providesTags: (_result, _error, id) => [{ type: 'Movie', id }],
+        }),
+        getMovieByGenre: builder.query<ApiResponse<Movie>, string>({
+            query: (id) => `/movies/genre/${id}`,
+            providesTags: (_result, _error, id) => [{ type: 'Movie', id }],
+        }),
 
         createMovie: builder.mutation<ApiResponse<Movie>, Partial<Movie>>({
             query: (body) => ({
@@ -76,5 +84,7 @@ export const {
     useGetMoviesQuery,
     useGetMoviesFeaturedQuery,
     useGetMovieByIdQuery,
+    useGetMovieByCountryQuery,
+    useGetMovieByGenreQuery,
 
 } = movieApi;

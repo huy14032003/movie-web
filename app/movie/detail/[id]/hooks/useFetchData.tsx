@@ -7,6 +7,7 @@ const useFetchData = () => {
     const { data:getMovieById, isLoading, error } = useGetMovieByIdQuery(id as string);
   return {
     getMovieById,
+    id
   }
 }
 

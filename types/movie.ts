@@ -9,7 +9,7 @@ export interface Movie {
   poster: string;
   backdrop?: string;
   director?: string;
-  cast?: string[];
+  actors?: (string | { id: number; name: string })[];
   trailer?: string;
   featured?: boolean;
   totalEpisodes?: number;

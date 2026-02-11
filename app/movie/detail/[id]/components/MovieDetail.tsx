@@ -9,7 +9,7 @@ import useFetchData from '../hooks/useFetchData';
 const MovieDetail = () => {
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState('movie');
-    const { getMovieById } = useFetchData();
+    const { getMovieById, id } = useFetchData();
     console.log(getMovieById);
     const movie = getMovieById?.data;
     // const episodes = Array.from({ length: movie?.totalEpisodes || 1 }, (_, i) => i + 1);
@@ -161,7 +161,7 @@ const MovieDetail = () => {
                             <button
                                 key={ep.id}
                                 className="px-3 py-2 bg-gray-800 hover:bg-yellow-500 hover:text-black rounded text-sm font-medium transition-colors"
-                                onClick={() => router.push(`/movie/view-movie/${ep.id}`)}
+                                onClick={() => router.push(`/movie/view-movie/${id}/${ep.id}`)}
                             >
                                 Tập {index + 1}
                             </button>
@@ -210,18 +210,18 @@ const MovieDetail = () => {
                 </div>
 
                 {/* Cast Section */}
-                {movie?.cast && movie?.cast.length > 0 && (
+                {movie?.actors && movie?.actors.length > 0 && (
                     <div className="mb-8">
                         <h2 className="text-xl md:text-2xl font-bold mb-4">Diễn viên</h2>
                         <div className="grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12 gap-4">
-                            {movie?.cast.map((actor, index) => (
+                            {movie?.actors.map((actor, index) => (
                                 <div key={index} className="text-center">
                                     <div className="w-full aspect-square rounded-full bg-gray-800 mb-2 flex items-center justify-center overflow-hidden">
                                         <svg className="w-12 h-12 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
                                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                                         </svg>
                                     </div>
-                                    <p className="text-sm text-white ">{actor}</p>
+                                    <p className="text-sm text-white ">{actor.toString()}</p>
                                 </div>
                             ))}
                         </div>
