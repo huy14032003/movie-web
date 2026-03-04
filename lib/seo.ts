@@ -130,7 +130,7 @@ export function createMovieMetadata(movie: Movie): Metadata {
     ...(movie.genres?.map(g => g.name) || []),
     movie.director || '',
     `phim ${movie.year}`,
-    ...(movie.cast || []),
+    ...(movie.actors?.map(a => a.name) || []),
   ].filter(Boolean);
 
   return createMetadata({
@@ -158,9 +158,9 @@ export function createMovieStructuredData(movie: Movie) {
       '@type': 'Person',
       name: movie.director || 'Unknown',
     },
-    actor: movie.cast?.map((actor) => ({
+    actor: movie.actors?.map((actor) => ({
       '@type': 'Person',
-      name: actor,
+      name: actor.name,
     })) || [],
     aggregateRating: {
       '@type': 'AggregateRating',
