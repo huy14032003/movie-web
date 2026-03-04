@@ -2,8 +2,10 @@
 import React from 'react';
 import Image from 'next/image';
 import { Movie } from '@/types/movie';
+import { useRouter } from 'next/navigation';
 
 const CardZoom = ({ movie }: { movie: Movie }) => {
+    const router = useRouter()
     return (
         <div className="w-full h-full">
             <div className="relative w-full h-full rounded-lg overflow-hidden shadow-xl shadow-black/50 border">
@@ -27,19 +29,32 @@ const CardZoom = ({ movie }: { movie: Movie }) => {
 
                     {/* Action Buttons */}
                     <div className="flex gap-3 mb-4">
-                        <button className="flex items-center gap-2 px-2 text-xs  py-1 bg-yellow-500 text-black rounded font-bold hover:bg-yellow-400 transition-colors">
-                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z" />
-                            </svg>
-                            Xem ngay
-                        </button>
-                        <button className="flex items-center gap-2 px-2 text-xs  py-1 bg-gray-800/90 text-white rounded font-semibold hover:bg-gray-700 transition-colors border border-gray-600">
+
+                        {movie?.episodes?.map((item: any, index: number) => {
+                            return (
+                                <div key={index}>
+                                    <button
+                                        onClick={() => router.push(`/movie/view-movie/${movie.id}/${item.id}`)}
+                                        className="flex items-center gap-2 px-2 text-xs  py-1 bg-yellow-500 text-black rounded font-bold hover:bg-yellow-400 transition-colors cursor-pointer">
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z" />
+                                        </svg>
+                                        <span>Xem ngay</span>
+                                    </button>
+                                </div>
+
+                            )
+                        })}
+
+                        <button className="flex items-center gap-2 px-2 text-xs  py-1 bg-gray-800/90 text-white rounded font-semibold hover:bg-gray-700 transition-colors border border-gray-600 cursor-pointer">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                             </svg>
                             Thích
                         </button>
-                        <button className="flex items-center gap-2 px-2 text-xs  py-1 bg-gray-800/90 text-white rounded font-semibold hover:bg-gray-700 transition-colors border border-gray-600">
+                        <button
+                            onClick={() => router.push(`/movie/detail/${movie.id}`)}
+                            className="flex items-center gap-2 px-2 text-xs  py-1 bg-gray-800/90 text-white rounded font-semibold hover:bg-gray-700 transition-colors border border-gray-600 cursor-pointer">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -56,10 +71,10 @@ const CardZoom = ({ movie }: { movie: Movie }) => {
                             {movie.year}
                         </span>
                         <span className="px-2.5 py-1 bg-gray-800/90 text-white text-xs font-semibold rounded border border-gray-600">
-                            Phần 1
+                            {movie.duration}
                         </span>
                         <span className="px-2.5 py-1 bg-gray-800/90 text-white text-xs font-semibold rounded border border-gray-600">
-                            Tập 8
+                            {movie?.episodes?.length ? movie?.episodes?.length < 2 ? `Phim lẻ` : 'Phim bộ' : 'Sắp ra mắt'}
                         </span>
                     </div>
 

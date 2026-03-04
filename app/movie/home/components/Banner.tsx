@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectFade } from "swiper/modules";
 import { Play, Info } from "lucide-react";
@@ -8,11 +9,12 @@ import { Play, Info } from "lucide-react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-import useGetData from "../hooks/useGetData";
+import { useRouter } from "next/navigation";
 
 
-const Banner = ({featuredMovies}: any) => {
+const Banner = ({ featuredMovies }: any) => {
 
+  const router = useRouter();
   if (!featuredMovies || featuredMovies.length === 0) {
     return (
       <div className="mb-8 h-[500px] md:h-[600px] bg-black/50 flex items-center justify-center">
@@ -36,13 +38,17 @@ const Banner = ({featuredMovies}: any) => {
         className="mySwiper h-[500px] md:h-[600px]"
       >
         {featuredMovies.map((movie: any) => (
+          console.log(movie),
           <SwiperSlide key={movie.id}>
             <div className="relative w-full h-full">
               <div className="absolute inset-0">
-                <img
+                <Image
                   src={movie.backdrop || movie.poster}
                   alt={movie.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="100vw"
+                  className="object-cover"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent" />
@@ -64,16 +70,18 @@ const Banner = ({featuredMovies}: any) => {
                     {movie.description}
                   </p>
                   <div className="flex flex-wrap gap-4">
+
                     <button
-                      onClick={() => { }}
-                      className="flex items-center gap-2 px-8 py-3 bg-white hover:bg-gray-200 text-black rounded-lg transition-colors font-medium"
+                      onClick={() => router.push(`/movie/view-movie/${movie.id}/${movie?.episodes?.[0]?.id}`)}
+                      className="flex items-center gap-2 px-8 py-3 bg-white hover:bg-gray-200 text-black rounded-lg transition-colors font-medium cursor-pointer"
                     >
                       <Play className="w-5 h-5 fill-black" />
                       <span>Xem ngay</span>
                     </button>
+
                     <button
-                      onClick={() => { }}
-                      className="flex items-center gap-2 px-8 py-3 bg-gray-700/80 hover:bg-gray-700 text-white rounded-lg transition-colors font-medium"
+                      onClick={() => router.push(`/movie/detail/${movie.id}`)}
+                      className="flex items-center gap-2 px-8 py-3 bg-gray-700/80 hover:bg-gray-700 text-white rounded-lg transition-colors font-medium cursor-pointer"
                     >
                       <Info className="w-5 h-5" />
                       <span>Thông tin</span>

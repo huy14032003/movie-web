@@ -4,37 +4,40 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Movie } from '@/types/movie';
 import useFetchData from '../hooks/useFetchData';
+import dayjs from 'dayjs';
 
 
 const MovieDetail = () => {
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState('movie');
-    const { getMovieById, id } = useFetchData();
-    console.log(getMovieById);
-    const movie = getMovieById?.data;
-    // const episodes = Array.from({ length: movie?.totalEpisodes || 1 }, (_, i) => i + 1);
-    const episodes = movie?.episodes?.length;
-    console.log(episodes);
-    // Mock comments data
-    const comments = [
-        {
-            id: 1,
-            user: 'Nguyễn Văn A',
-            time: '2 giờ trước',
-            content: 'Phim hay quá, diễn xuất rất tốt! Đáng xem',
-            likes: 12,
-            dislikes: 1
-        },
-        {
-            id: 2,
-            user: 'Trần Thị B',
-            time: '5 giờ trước',
-            content: 'Cốt truyện hấp dẫn, mình rất thích phần hành động',
-            likes: 8,
-            dislikes: 0
-        },
-    ];
+    const [visibleCount, setVisibleCount] = useState(3);
+    const { getMovieById, id, getCommentByMovieId } = useFetchData();
 
+
+    const movie = getMovieById?.data;
+    // const comments = [
+    //     {
+    //         id: 1,
+    //         user: 'Nguyễn Văn A',
+    //         time: '2 giờ trước',
+    //         content: 'Phim hay quá, diễn xuất rất tốt! Đáng xem',
+    //         likes: 12,
+    //         dislikes: 1
+    //     },
+    //     {
+    //         id: 2,
+    //         user: 'Trần Thị B',
+    //         time: '5 giờ trước',
+    //         content: 'Cốt truyện hấp dẫn, mình rất thích phần hành động',
+    //         likes: 8,
+    //         dislikes: 0
+    //     },
+    // ];
+    const comments = getCommentByMovieId?.data?.content;
+    const handleShare = () => {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Đã copy link!');
+    };
     return (
         <div className="min-h-screen bg-black text-white">
             {/* Hero Section with Backdrop */}
@@ -109,26 +112,33 @@ const MovieDetail = () => {
             <div className="max-w-7xl mx-auto px-4 py-6 md:py-8">
                 {/* Action Buttons */}
                 <div className="flex flex-wrap items-center gap-3 mb-6 md:mb-8">
-                    <button className="flex items-center gap-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg transition-colors">
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
-                        </svg>
-                        Xem Ngay
-                    </button>
 
-                    <button className="px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors">
+                    {movie?.episodes && movie.episodes.length > 0 && (
+                        <button
+                            onClick={() => router.push(`/movie/view-movie/${id}/${movie.episodes![0].id}`)}
+                            className="flex items-center gap-2 px-6 py-3 bg-yellow-500 hover:bg-yellow-600 text-black font-semibold rounded-lg transition-colors cursor-pointer"
+                        >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M6.3 2.841A1.5 1.5 0 004 4.11V15.89a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
+                            </svg>
+                            Xem Ngay
+                        </button>
+                    )}
+
+
+                    <button className="px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                     </button>
 
-                    <button className="px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors">
+                    <button onClick={handleShare} className="px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                         </svg>
                     </button>
 
-                    <button className="px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors">
+                    <button className="px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-lg transition-colors cursor-pointer">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                         </svg>
@@ -137,7 +147,9 @@ const MovieDetail = () => {
                     {/* Quality Badges */}
                     <div className="flex gap-2 ml-auto">
                         <span className="px-3 py-1 bg-red-600 text-white text-xs font-bold rounded">FHD</span>
-                        <span className="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded">4K</span>
+                        {movie?.episodes?.[0]?.quality && (
+                            <span className="px-3 py-1 bg-blue-600 text-white text-xs font-bold rounded">{movie?.episodes?.[0]?.quality}</span>
+                        )}
                     </div>
                 </div>
 
@@ -160,7 +172,7 @@ const MovieDetail = () => {
                         {movie?.episodes?.map((ep, index) => (
                             <button
                                 key={ep.id}
-                                className="px-3 py-2 bg-gray-800 hover:bg-yellow-500 hover:text-black rounded text-sm font-medium transition-colors"
+                                className="px-3 py-2 bg-gray-800 hover:bg-yellow-500 hover:text-black rounded text-sm font-medium transition-colors cursor-pointer"
                                 onClick={() => router.push(`/movie/view-movie/${id}/${ep.id}`)}
                             >
                                 Tập {index + 1}
@@ -221,7 +233,7 @@ const MovieDetail = () => {
                                             <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                                         </svg>
                                     </div>
-                                    <p className="text-sm text-white ">{actor.toString()}</p>
+                                    <p key={actor?.id} className="text-sm text-white ">{actor?.name}</p>
                                 </div>
                             ))}
                         </div>
@@ -230,7 +242,7 @@ const MovieDetail = () => {
 
                 {/* Comments Section */}
                 <div>
-                    <h2 className="text-xl md:text-2xl font-bold mb-4">Bình luận ({comments.length})</h2>
+                    <h2 className="text-xl md:text-2xl font-bold mb-4">Bình luận ({comments?.length})</h2>
 
                     {/* Comment Form */}
                     <div className="mb-6 p-4 bg-gray-900 rounded-lg">
@@ -248,7 +260,7 @@ const MovieDetail = () => {
 
                     {/* Comments List */}
                     <div className="space-y-4">
-                        {comments.map((comment) => (
+                        {comments?.slice(0, visibleCount).map((comment: any) => (
                             <div key={comment.id} className="p-4 bg-gray-900 rounded-lg">
                                 <div className="flex items-start gap-3">
                                     {/* Avatar */}
@@ -261,13 +273,13 @@ const MovieDetail = () => {
                                     {/* Comment Content */}
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <span className="font-semibold text-white">{comment.user}</span>
-                                            <span className="text-xs text-gray-500">{comment.time}</span>
+                                            <span className="font-semibold text-white">{comment.username}</span>
+                                            <span className="text-xs text-gray-500">{dayjs(comment.createdAt).format('DD/MM/YYYY - HH:mm:ss')}</span>
                                         </div>
                                         <p className="text-gray-300 text-sm mb-2">{comment.content}</p>
 
                                         {/* Like/Dislike */}
-                                        <div className="flex items-center gap-4 text-sm">
+                                        {/* <div className="flex items-center gap-4 text-sm">
                                             <button className="flex items-center gap-1 text-gray-400 hover:text-yellow-500 transition-colors">
                                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
@@ -280,12 +292,24 @@ const MovieDetail = () => {
                                                 </svg>
                                                 <span>{comment.dislikes}</span>
                                             </button>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </div>
                             </div>
                         ))}
                     </div>
+
+                    {/* Load More */}
+                    {comments && visibleCount < comments.length && (
+                        <div className="flex justify-center mt-4">
+                            <button
+                                onClick={() => setVisibleCount(prev => prev + 3)}
+                                className="px-6 py-2 bg-gray-800 hover:bg-yellow-500 hover:text-black text-white font-semibold rounded-lg transition-colors cursor-pointer"
+                            >
+                                Xem thêm ({comments.length - visibleCount} bình luận)
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

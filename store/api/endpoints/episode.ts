@@ -1,5 +1,11 @@
 import { baseApi } from "../baseApi";
 
+interface RateEpisodeRequest {
+    type: string;
+    score: number;
+    episode_id: number;
+}
+
 export const movieApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         getEpisodeByMovieId: builder.query({
@@ -17,9 +23,18 @@ export const movieApi = baseApi.injectEndpoints({
             }),
             providesTags: ["Episode"]
         }),
+
+        rateEpisode: builder.mutation<void, RateEpisodeRequest>({
+            query: (body) => ({
+                url: `/episodes/rate`,
+                method: 'POST',
+                body,
+            }),
+        }),
     }),
 });
 export const {
     useGetEpisodeByMovieIdQuery,
     useGetEpisodeByIdQuery,
+    useRateEpisodeMutation,
 } = movieApi;

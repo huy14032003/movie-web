@@ -1,10 +1,11 @@
 "use client";
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import Hls from 'hls.js';
 import { Movie } from '@/types/movie';
 import useFetchData from '../hooks/useFetchData';
 import { Genre } from '@/app/movie/home/types/HomeType';
+import { useRateEpisodeMutation } from '@/store/api/endpoints/episode';
 
 interface VideoPlayerPageProps {
     movieId: string;
@@ -15,14 +16,35 @@ const VideoPlayerPage = ({ movieId, episodeId }: VideoPlayerPageProps) => {
     const [isFavorite, setIsFavorite] = useState(false);
     const [currentEpisode, setCurrentEpisode] = useState(1);
     const [selectedServer, setSelectedServer] = useState('VIP');
+    const [selectedRating, setSelectedRating] = useState(0);
+    const [hoverRating, setHoverRating] = useState(0);
+    const [visibleCount, setVisibleCount] = useState(3);
     const videoRef = useRef<HTMLVideoElement>(null);
 
-    const { episodeList, movieData, getAllMovie } = useFetchData(movieId, episodeId);
-    console.log(movieData)
+    const [rateEpisode] = useRateEpisodeMutation();
+    const { episodeList, movieData, getAllMovie, getCommentByMovieId } = useFetchData(movieId, episodeId);
 
 
 
     const movie = movieData?.data;
+
+    const defaultRating = useMemo(() => {
+        return movie?.rating ? Math.round(movie.rating) : 0;
+    }, [movie?.rating]);
+
+    useEffect(() => {
+        setSelectedRating(defaultRating);
+    }, [defaultRating]);
+
+    const handleRating = async (star: number) => {
+        setSelectedRating(star);
+        await rateEpisode({
+            type: 'rate',
+            score: star,
+            episode_id: Number(episodeId),
+        });
+    };
+
     const movieGenreIds = movie?.genres?.map(g => g.id) || [];
     const ListMovie = getAllMovie?.content.filter((item: Movie) =>
         item.genres?.some((genre: Genre) => movieGenreIds.includes(genre.id))
@@ -32,7 +54,6 @@ const VideoPlayerPage = ({ movieId, episodeId }: VideoPlayerPageProps) => {
     const servers = ['VIP', 'Server 1', 'Server 2', 'Server 3'];
 
     const videoUrl = episodeList?.data?.videoUrl;
-    console.log(videoUrl)
 
     useEffect(() => {
         const video = videoRef.current;
@@ -78,37 +99,7 @@ const VideoPlayerPage = ({ movieId, episodeId }: VideoPlayerPageProps) => {
         }
     }, [videoUrl]);
 
-    // Mock comments
-    const comments = [
-        {
-            id: 1,
-            user: 'Nguyễn Văn A',
-            avatar: null,
-            time: '2 giờ trước',
-            content: 'Phim hay quá! Diễn xuất tuyệt vời 😍',
-            likes: 24,
-            dislikes: 2,
-        },
-        {
-            id: 2,
-            user: 'Trần Thị B',
-            avatar: null,
-            time: '5 giờ trước',
-            content: 'Cảnh hành động mãn nhãn, đáng xem!',
-            likes: 15,
-            dislikes: 1,
-        },
-        {
-            id: 3,
-            user: 'Lê Văn C',
-            avatar: null,
-            time: '1 ngày trước',
-            content: 'Cốt truyện hấp dẫn, mong có phần 2',
-            likes: 8,
-            dislikes: 0,
-        },
-    ];
-
+    const comments = getCommentByMovieId?.data?.content;
     const handleShare = () => {
         navigator.clipboard.writeText(window.location.href);
         alert('Đã copy link!');
@@ -259,10 +250,42 @@ const VideoPlayerPage = ({ movieId, episodeId }: VideoPlayerPageProps) => {
 
                         {/* Comments */}
                         <div className="bg-gray-900 rounded-lg p-4">
-                            <h2 className="text-xl font-bold mb-4">Bình luận ({comments.length})</h2>
+                            <h2 className="text-xl font-bold mb-4">Bình luận ({comments?.length})</h2>
 
                             {/* Comment Form */}
                             <div className="mb-6">
+                                {/* Star Rating */}
+                                <div className="mb-3">
+                                    <p className="text-sm text-gray-400 mb-2">Đánh giá của bạn:</p>
+                                    <div className="flex items-center gap-1">
+                                        {Array.from({ length: 10 }, (_, i) => i + 1).map((star) => (
+                                            <button
+                                                key={star}
+                                                type="button"
+                                                onClick={() => handleRating(star)}
+                                                onMouseEnter={() => setHoverRating(star)}
+                                                onMouseLeave={() => setHoverRating(0)}
+                                                className="transition-transform hover:scale-125"
+                                            >
+                                                <svg
+                                                    className={`w-6 h-6 transition-colors ${star <= (hoverRating || selectedRating)
+                                                        ? 'text-yellow-400 fill-yellow-400'
+                                                        : 'text-gray-600 fill-gray-600'
+                                                        }`}
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                                </svg>
+                                            </button>
+                                        ))}
+                                        <span className="ml-2 text-sm font-semibold text-yellow-400">
+                                            {(hoverRating || selectedRating) > 0
+                                                ? `${hoverRating || selectedRating}/10`
+                                                : ''}
+                                        </span>
+                                    </div>
+                                </div>
+
                                 <textarea
                                     className="w-full p-3 bg-gray-800 text-white rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-yellow-500"
                                     rows={3}
@@ -277,7 +300,7 @@ const VideoPlayerPage = ({ movieId, episodeId }: VideoPlayerPageProps) => {
 
                             {/* Comments List */}
                             <div className="space-y-4">
-                                {comments.map((comment) => (
+                                {comments?.slice(0, visibleCount)?.map((comment: any) => (
                                     <div key={comment.id} className="flex items-start gap-3">
                                         <div className="w-10 h-10 rounded-full bg-gray-700 shrink-0 flex items-center justify-center">
                                             <svg className="w-6 h-6 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
@@ -307,6 +330,16 @@ const VideoPlayerPage = ({ movieId, episodeId }: VideoPlayerPageProps) => {
                                         </div>
                                     </div>
                                 ))}
+                                {comments && visibleCount < comments.length && (
+                                    <div className="flex justify-center mt-4">
+                                        <button
+                                            onClick={() => setVisibleCount(prev => prev + 3)}
+                                            className="px-6 py-2 bg-gray-800 hover:bg-yellow-500 hover:text-black text-white font-semibold rounded-lg transition-colors cursor-pointer"
+                                        >
+                                            Xem thêm ({comments.length - visibleCount} bình luận)
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
